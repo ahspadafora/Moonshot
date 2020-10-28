@@ -30,6 +30,18 @@ struct Mission: Codable, Identifiable {
         "apollo\(id)"
     }
     
+    var crewString: String {
+        var str = ""
+        for i in 0..<crew.count {
+            if i == crew.count - 1 {
+                str.append("\(crew[i].name.capitalized)")
+            } else {
+                str.append("\(crew[i].name.capitalized), ")
+            }
+        }
+        return str
+    }
+    
     var formattedLaunchDate: String {
         if let launchDate = launchDate {
             let formatter = DateFormatter()

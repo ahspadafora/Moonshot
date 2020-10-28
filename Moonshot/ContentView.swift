@@ -9,25 +9,41 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     let astronauts: [Astronaut] = Bundle.main.decodeJSON("astronauts.json")
     let missions: [Mission] = Bundle.main.decodeJSON("missions.json")
+    
+    // if isShowingLaunchDates is false, then crew names will be listed instead
+    @State private var isShowingLaunchDates = false
+    
     
     var body: some View {
         
         NavigationView {
-            List(missions) { mission in
-                NavigationLink(destination: MissionView(mission: mission, astronauts: self.astronauts)) {
-                    Image(mission.image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 44, height: 44)
-                    VStack(alignment: .leading) {
-                        Text(mission.displayName).font(.headline)
-                        Text(mission.formattedLaunchDate)
+            VStack {
+                Toggle(isOn: $isShowingLaunchDates) {
+                    Text("Show Launch Dates")
+                }.padding()
+                
+                List(missions) { mission in
+                    NavigationLink(destination: MissionView(mission: mission, astronauts: self.astronauts, allMissions: self.missions)) {
+                        Image(mission.image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 44, height: 44)
+                        VStack(alignment: .leading) {
+                            Text(mission.displayName).font(.headline)
+                            if self.isShowingLaunchDates {
+                                Text(mission.formattedLaunchDate)
+                            } else {
+                                Text("Crew: \(mission.crewString)")
+                            }
+                            
+                        }
                     }
                 }
+                .navigationBarTitle("Moonshot")
             }
-            .navigationBarTitle("Moonshot")
         }
         
         
